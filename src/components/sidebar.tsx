@@ -31,13 +31,23 @@ function YDocOptions() {
             })
           }
         >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-v1" id="option-v1" />
-            <Label htmlFor="option-v1">V1</Label>
+          <div className="flex items-center">
+            <Label
+              htmlFor="option-v1"
+              className="cursor-pointer flex gap-2 justify-center items-center"
+            >
+              <RadioGroupItem value="option-v1" id="option-v1" />
+              <span>V1</span>
+            </Label>
           </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="option-v2" id="option-v2" />
-            <Label htmlFor="option-v2">V2</Label>
+          <div className="flex items-center">
+            <Label
+              htmlFor="option-v2"
+              className="cursor-pointer flex gap-2 justify-center items-center"
+            >
+              <RadioGroupItem value="option-v2" id="option-v2" />
+              <span>V2</span>
+            </Label>
           </div>
         </RadioGroup>
       </div>
@@ -67,37 +77,52 @@ function DisplayOptions() {
         />
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="clipboard"
-          checked={enableClipboard}
-          onCheckedChange={(e) =>
-            displayOptionStore.setState({ enableClipboard: e })
-          }
-        />
-        <Label htmlFor="clipboard">Enable Clipboard</Label>
+      <div className="flex items-center">
+        <Label
+          htmlFor="clipboard"
+          className="cursor-pointer flex gap-2 justify-center items-center"
+        >
+          <Switch
+            id="clipboard"
+            checked={enableClipboard}
+            onCheckedChange={(e) =>
+              displayOptionStore.setState({ enableClipboard: e })
+            }
+          />
+          <span>Enable Clipboard</span>
+        </Label>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="data-types"
-          checked={displayDataTypes}
-          onCheckedChange={(e) =>
-            displayOptionStore.setState({ displayDataTypes: e })
-          }
-        />
-        <Label htmlFor="data-types">Display Data Types</Label>
+      <div className="flex items-center">
+        <Label
+          htmlFor="data-types"
+          className="cursor-pointer flex gap-2 justify-center items-center"
+        >
+          <Switch
+            id="data-types"
+            checked={displayDataTypes}
+            onCheckedChange={(e) =>
+              displayOptionStore.setState({ displayDataTypes: e })
+            }
+          />
+          <span>Display Data Types</span>
+        </Label>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="size"
-          checked={displaySize}
-          onCheckedChange={(e) =>
-            displayOptionStore.setState({ displaySize: e })
-          }
-        />
-        <Label htmlFor="size">Display Size</Label>
+      <div className="flex items-center">
+        <Label
+          htmlFor="size"
+          className="cursor-pointer flex gap-2 justify-center items-center"
+        >
+          <Switch
+            id="size"
+            checked={displaySize}
+            onCheckedChange={(e) =>
+              displayOptionStore.setState({ displaySize: e })
+            }
+          />
+          <span>Display Size</span>
+        </Label>
       </div>
     </>
   );
