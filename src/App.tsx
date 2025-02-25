@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { JsonViewer } from "@textea/json-viewer";
 import { Sidebar } from "./components/sidebar";
 import { Input } from "@/components/ui/input";
@@ -20,21 +20,17 @@ export default function App() {
         if (apiVersion === "v1") Y.applyUpdate(ydoc, buf);
         if (apiVersion === "v2") Y.applyUpdateV2(ydoc, buf);
       }
-      displayOptionStore.setState({ display: ydoc });
+      displayOptionStore.setState({ display: ydoc, displayError: null });
       // @ts-expect-error expose ydoc for advance debug
       window.currentDoc = ydoc;
     } catch (e) {
-      displayOptionStore.setState({ display: e });
+      // @ts-expect-error expose ydoc for advance debug
+      window.currentDoc = null;
+      ydoc.destroy();
+      displayOptionStore.setState({ display: null, displayError: e });
     }
 
-    if (
-      typeof prev === "object" &&
-      prev &&
-      "destroy" in prev &&
-      typeof prev.destroy === "function"
-    ) {
-      prev.destroy();
-    }
+    if (prev && prev.destroy) prev.destroy();
   }, [inputBuffer, apiVersion]);
 
   return (
@@ -50,17 +46,19 @@ export default function App() {
           }
           className="mb-4 bg-gray-800 text-white border-gray-700"
         />
-        <div className="flex-1 overflow-auto bg-gray-800 rounded-lg p-4 [&>div]:px-4 [&>div]:py-2">
-          <Viewer />
+        <div className="flex-1 gap-4 grid grid-cols-2 overflow-auto bg-gray-800 rounded-lg p-4 [&>div]:px-4 [&>div]:py-2">
+          <MainViewer />
+          <SideViewer />
         </div>
       </main>
     </div>
   );
 }
 
-function Viewer() {
+function MainViewer() {
   const {
     display,
+    displayError,
     indentWidth,
     enableClipboard,
     displaySize,
@@ -69,7 +67,46 @@ function Viewer() {
   return (
     <JsonViewer
       theme="dark"
-      value={display}
+      value={displayError ?? display}
+      indentWidth={indentWidth}
+      enableClipboard={enableClipboard}
+      displayDataTypes={displayDataTypes}
+      displaySize={displaySize}
+      defaultInspectDepth={3}
+    />
+  );
+}
+
+function SideViewer() {
+  const {
+    display,
+    displayError,
+    indentWidth,
+    enableClipboard,
+    displaySize,
+    displayDataTypes,
+  } = useStore(displayOptionStore);
+  const getApiType = useStore(yDocOptionStore, (s) => s.getApiType);
+  const contentDisplay = useMemo(() => {
+    if (!display) return null;
+    try {
+      const ydoc = new Y.Doc();
+      Y.applyUpdateV2(ydoc, Y.encodeStateAsUpdateV2(display));
+      const displayObj: Record<string, unknown> = {};
+      for (const key of ydoc.share.keys()) {
+        displayObj[key] = ydoc[getApiType](key);
+      }
+      ydoc.destroy();
+      return displayObj;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      return null;
+    }
+  }, [display, getApiType]);
+  return (
+    <JsonViewer
+      theme="dark"
+      value={displayError ?? contentDisplay}
       indentWidth={indentWidth}
       enableClipboard={enableClipboard}
       displayDataTypes={displayDataTypes}

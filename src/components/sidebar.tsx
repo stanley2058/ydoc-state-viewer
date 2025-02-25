@@ -3,7 +3,12 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useStore } from "zustand";
-import { displayOptionStore, yDocOptionStore } from "@/lib/store";
+import {
+  displayOptionStore,
+  GetApi,
+  getApis,
+  yDocOptionStore,
+} from "@/lib/store";
 
 export function Sidebar() {
   return (
@@ -16,7 +21,7 @@ export function Sidebar() {
 }
 
 function YDocOptions() {
-  const { apiVersion } = useStore(yDocOptionStore);
+  const { apiVersion, getApiType } = useStore(yDocOptionStore);
   return (
     <>
       <h3 className="text-lg font-semibold mt-2">Y.Doc Options</h3>
@@ -49,6 +54,30 @@ function YDocOptions() {
               <span>V2</span>
             </Label>
           </div>
+        </RadioGroup>
+      </div>
+
+      <h4 className="text-sm font-semibold">View Data As</h4>
+      <div className="flex items-center space-x-2">
+        <RadioGroup
+          value={`option-${getApiType}`}
+          onValueChange={(v) =>
+            yDocOptionStore.setState({
+              getApiType: v.split("-")[1] as GetApi,
+            })
+          }
+        >
+          {getApis.map((k) => (
+            <div key={k} className="flex items-center">
+              <Label
+                htmlFor={`option-${k}`}
+                className="cursor-pointer flex gap-2 justify-center items-center"
+              >
+                <RadioGroupItem value={`option-${k}`} id={`option-${k}`} />
+                <code>{k}</code>
+              </Label>
+            </div>
+          ))}
         </RadioGroup>
       </div>
     </>
