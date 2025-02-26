@@ -21,7 +21,8 @@ export function Sidebar() {
 }
 
 function YDocOptions() {
-  const { apiVersion, getApiType } = useStore(yDocOptionStore);
+  const apiVersion = useStore(yDocOptionStore, (s) => s.apiVersion);
+  const getApiType = useStore(yDocOptionStore, (s) => s.getApiType);
   return (
     <>
       <h3 className="text-lg font-semibold mt-2">Y.Doc Options</h3>
@@ -85,8 +86,17 @@ function YDocOptions() {
 }
 
 function DisplayOptions() {
-  const { indentWidth, enableClipboard, displayDataTypes, displaySize } =
-    useStore(displayOptionStore);
+  const indentWidth = useStore(displayOptionStore, (s) => s.indentWidth);
+  const enableClipboard = useStore(
+    displayOptionStore,
+    (s) => s.enableClipboard,
+  );
+  const displayDataTypes = useStore(
+    displayOptionStore,
+    (s) => s.displayDataTypes,
+  );
+  const displaySize = useStore(displayOptionStore, (s) => s.displaySize);
+
   return (
     <>
       <h3 className="text-lg font-semibold mt-2">Display Options</h3>

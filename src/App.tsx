@@ -8,7 +8,23 @@ import { useStore } from "zustand";
 import { displayOptionStore, yDocOptionStore } from "./lib/store";
 
 export default function App() {
-  const { apiVersion, inputBuffer } = useStore(yDocOptionStore);
+  return (
+    <div className="flex h-screen bg-gray-900 text-white">
+      <Sidebar />
+      <main className="flex-1 flex flex-col p-4">
+        <InputContainer />
+        <div className="flex-1 gap-4 grid grid-cols-2 overflow-auto bg-gray-800 rounded-lg p-4 [&>div]:px-4 [&>div]:py-2">
+          <MainViewer />
+          <SideViewer />
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function InputContainer() {
+  const apiVersion = useStore(yDocOptionStore, (s) => s.apiVersion);
+  const inputBuffer = useStore(yDocOptionStore, (s) => s.inputBuffer);
 
   useEffect(() => {
     const prev = displayOptionStore.getState().display;
@@ -34,24 +50,15 @@ export default function App() {
   }, [inputBuffer, apiVersion]);
 
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
-      <Sidebar />
-      <main className="flex-1 flex flex-col p-4">
-        <Input
-          type="text"
-          placeholder="Enter HEX state here"
-          value={inputBuffer}
-          onChange={(e) =>
-            yDocOptionStore.setState({ inputBuffer: e.target.value })
-          }
-          className="mb-4 bg-gray-800 text-white border-gray-700"
-        />
-        <div className="flex-1 gap-4 grid grid-cols-2 overflow-auto bg-gray-800 rounded-lg p-4 [&>div]:px-4 [&>div]:py-2">
-          <MainViewer />
-          <SideViewer />
-        </div>
-      </main>
-    </div>
+    <Input
+      type="text"
+      placeholder="Enter HEX state here"
+      value={inputBuffer}
+      onChange={(e) =>
+        yDocOptionStore.setState({ inputBuffer: e.target.value })
+      }
+      className="mb-4 bg-gray-800 text-white border-gray-700"
+    />
   );
 }
 
